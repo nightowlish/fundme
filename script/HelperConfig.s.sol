@@ -8,6 +8,8 @@ import {MockV3Aggregator} from "mocks/MockV3Aggregator.sol";
 
 contract HelperConfig is Script {
     Constants.NetworkConfig public activePriceFeed;
+    uint8 public constant DECIMALS = 8;
+    int256 public constant INITIAL_PRICE = 3000e8;
 
     constructor() {
         if (block.chainid == Constants.ANVILE_CHAIN_ID) {
@@ -23,7 +25,10 @@ contract HelperConfig is Script {
     {
         // Deploy mock priceFeed contract
         vm.startBroadcast();
-        MockV3Aggregator mockPriceFeed = new MockV3Aggregator(8, 3000e8);
+        MockV3Aggregator mockPriceFeed = new MockV3Aggregator(
+            DECIMALS,
+            INITIAL_PRICE
+        );
         vm.stopBroadcast();
 
         return Constants.NetworkConfig(address(mockPriceFeed));
