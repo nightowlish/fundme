@@ -19,7 +19,7 @@ contract FundMeTest is Test {
     }
 
     function testOwnerIsMsgSender() public view {
-        assertEq(fundMe.i_owner(), address(this), "Incorrect owner");
+        assertEq(fundMe.i_owner(), msg.sender, "Incorrect owner");
     }
 
     function testPriceFeedVersion() public view {
