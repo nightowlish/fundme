@@ -15,26 +15,18 @@ contract HelperConfig is Script {
         if (block.chainid == NetworkConstants.ANVILE_CHAIN_ID) {
             activePriceFeed = getOrCreateAnvileEthUsdConfig();
         } else {
-            activePriceFeed = NetworkConstants.chainIdToEthUsdConfig(
-                block.chainid
-            );
+            activePriceFeed = NetworkConstants.chainIdToEthUsdConfig(block.chainid);
         }
     }
 
-    function getOrCreateAnvileEthUsdConfig()
-        public
-        returns (NetworkConstants.NetworkConfig memory)
-    {
+    function getOrCreateAnvileEthUsdConfig() public returns (NetworkConstants.NetworkConfig memory) {
         if (activePriceFeed.priceFeed != address(0)) {
             return activePriceFeed;
         }
 
         // Deploy mock priceFeed contract
         vm.startBroadcast();
-        MockV3Aggregator mockPriceFeed = new MockV3Aggregator(
-            DECIMALS,
-            INITIAL_PRICE
-        );
+        MockV3Aggregator mockPriceFeed = new MockV3Aggregator(DECIMALS, INITIAL_PRICE);
         vm.stopBroadcast();
 
         return NetworkConstants.NetworkConfig(address(mockPriceFeed));

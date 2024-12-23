@@ -40,11 +40,7 @@ contract FundMeTest is Test {
         } else {
             expectedFundMeVersion = 4;
         }
-        assertEq(
-            fundMe.getVersion(),
-            expectedFundMeVersion,
-            "Incorrect price feed version"
-        );
+        assertEq(fundMe.getVersion(), expectedFundMeVersion, "Incorrect price feed version");
     }
 
     function testFundFailsIfNotEnoughETH() public {
@@ -55,11 +51,7 @@ contract FundMeTest is Test {
     function testFundUpdatesFundedDataStructure() public {
         vm.prank(USER); // the next TX will be sent by USER
         fundMe.fund{value: SEND_VALUE}();
-        assertEq(
-            SEND_VALUE,
-            fundMe.getAddressToAmountFunded(USER),
-            "Incorrect amount funded"
-        );
+        assertEq(SEND_VALUE, fundMe.getAddressToAmountFunded(USER), "Incorrect amount funded");
     }
 
     function testAddFunderToArrayOfFunders() public {
@@ -89,15 +81,9 @@ contract FundMeTest is Test {
         fundMe.withdraw();
 
         assertEq(
-            initialOwnerBalance + initialContractBalance,
-            owner.balance,
-            "Incorrect owner balance after withdrawal"
+            initialOwnerBalance + initialContractBalance, owner.balance, "Incorrect owner balance after withdrawal"
         );
-        assertEq(
-            0,
-            address(fundMe).balance,
-            "Incorrect contract balance after withdrawal"
-        );
+        assertEq(0, address(fundMe).balance, "Incorrect contract balance after withdrawal");
     }
 
     function testOwnerCanWithdrawWhenMultipleFounder() public funded {
@@ -116,15 +102,9 @@ contract FundMeTest is Test {
         fundMe.withdraw();
 
         assertEq(
-            initialOwnerBalance + initialContractBalance,
-            owner.balance,
-            "Incorrect owner balance after withdrawal"
+            initialOwnerBalance + initialContractBalance, owner.balance, "Incorrect owner balance after withdrawal"
         );
-        assertEq(
-            0,
-            address(fundMe).balance,
-            "Incorrect contract balance after withdrawal"
-        );
+        assertEq(0, address(fundMe).balance, "Incorrect contract balance after withdrawal");
     }
 
     function testOwnerCanWithdrawWhenNoFunders() public {
@@ -134,15 +114,7 @@ contract FundMeTest is Test {
         vm.prank(owner);
         fundMe.withdraw();
 
-        assertEq(
-            initialOwnerBalance,
-            owner.balance,
-            "Incorrect owner balance after withdrawal"
-        );
-        assertEq(
-            0,
-            address(fundMe).balance,
-            "Incorrect contract balance after withdrawal"
-        );
+        assertEq(initialOwnerBalance, owner.balance, "Incorrect owner balance after withdrawal");
+        assertEq(0, address(fundMe).balance, "Incorrect contract balance after withdrawal");
     }
 }
