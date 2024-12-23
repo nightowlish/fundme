@@ -23,6 +23,10 @@ contract HelperConfig is Script {
         public
         returns (Constants.NetworkConfig memory)
     {
+        if (activePriceFeed.priceFeed != address(0)) {
+            return activePriceFeed;
+        }
+
         // Deploy mock priceFeed contract
         vm.startBroadcast();
         MockV3Aggregator mockPriceFeed = new MockV3Aggregator(
