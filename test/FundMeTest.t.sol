@@ -6,6 +6,7 @@ import {Test, console} from "forge-std/Test.sol";
 import {FundMe} from "../src/FundMe.sol";
 import {DeployFundMe} from "../script/DeployFundMe.s.sol";
 import {NetworkConstants} from "../lib/NetworkConstants.sol";
+import {MathConstants} from "../lib/MathConstants.sol";
 
 contract FundMeTest is Test {
     FundMe fundMe;
@@ -43,6 +44,6 @@ contract FundMeTest is Test {
     }
 
     function testFundUpdatesFundedDataStructure() public {
-        fundMe.fund{value: 1e18}();
+        fundMe.fund{value: MathConstants.WEI_IN_ONE_ETH}();
     }
 }
