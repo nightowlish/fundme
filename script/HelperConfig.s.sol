@@ -20,6 +20,8 @@ contract HelperConfig is Script {
             activePriceFeed = getSepoliaEthUsdConfig();
         } else if (block.chainid == ANVILE_CHAIN_ID) {
             activePriceFeed = getAnvileEthUsdConfig();
+        } else if (block.chainid == 1) {
+            activePriceFeed = getMainnetEthUsdConfig();
         } else {
             revert HelperConfig__ChainIdNotSupported();
         }
@@ -43,6 +45,17 @@ contract HelperConfig is Script {
     {
         NetworkConfig memory networkConfig = NetworkConfig({
             priceFeed: 0x8A753747A1Fa494EC906cE90E9f37563A8AF630e
+        });
+        return networkConfig;
+    }
+
+    function getMainnetEthUsdConfig()
+        public
+        pure
+        returns (NetworkConfig memory)
+    {
+        NetworkConfig memory networkConfig = NetworkConfig({
+            priceFeed: 0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419
         });
         return networkConfig;
     }
