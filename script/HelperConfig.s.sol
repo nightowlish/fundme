@@ -13,13 +13,13 @@ contract HelperConfig is Script {
 
     constructor() {
         if (block.chainid == Constants.ANVILE_CHAIN_ID) {
-            activePriceFeed = getAnvileEthUsdConfig();
+            activePriceFeed = getOrCreateAnvileEthUsdConfig();
         } else {
             activePriceFeed = Constants.chainIdToEthUsdConfig(block.chainid);
         }
     }
 
-    function getAnvileEthUsdConfig()
+    function getOrCreateAnvileEthUsdConfig()
         public
         returns (Constants.NetworkConfig memory)
     {
