@@ -13,6 +13,12 @@ contract FundMeTest is Test {
     uint256 immutable USER_BALANCE = 1 ether;
     uint256 immutable SEND_VALUE = 0.1 ether;
 
+    modifier funded() {
+        vm.prank(USER);
+        fundMe.fund{value: SEND_VALUE}();
+        _;
+    }
+
     function setUp() external {
         DeployFundMe deployFundMe = new DeployFundMe();
         fundMe = deployFundMe.run();
@@ -54,5 +60,23 @@ contract FundMeTest is Test {
             fundMe.getAddressToAmountFunded(USER),
             "Incorrect amount funded"
         );
+    }
+
+    function testAddFunderToArrayOfFunders() public {
+        vm.prank(USER); // the next TX will be sent by USER
+        fundMe.fund{value: SEND_VALUE}();
+        assertEq(USER, fundMe.getFunder(0), "Incorrect funder");
+    }
+
+    function testOnlyOwnerCanWithdrawWhenFundsExist() public funded {
+        vm.expectRevert();
+        vm.prank(USER);
+        fundMe.withdraw();
+    }
+
+    function testOnlyOwnerCanWithdrawWhenNoFundsExist() public {
+        vm.expectRevert();
+        vm.prank(USER);
+        fundMe.withdraw();
     }
 }
