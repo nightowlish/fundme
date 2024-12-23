@@ -6,14 +6,17 @@ import {Test, console} from "forge-std/Test.sol";
 import {FundMe} from "../src/FundMe.sol";
 import {DeployFundMe} from "../script/DeployFundMe.s.sol";
 import {NetworkConstants} from "../lib/NetworkConstants.sol";
-import {MathConstants} from "../lib/MathConstants.sol";
 
 contract FundMeTest is Test {
     FundMe fundMe;
+    address immutable USER = makeAddr("USER");
+    uint256 immutable USER_BALANCE = 1 ether;
+    uint256 immutable SEND_VALUE = 0.1 ether;
 
     function setUp() external {
         DeployFundMe deployFundMe = new DeployFundMe();
         fundMe = deployFundMe.run();
+        vm.deal(USER, USER_BALANCE);
     }
 
     function testMinimumDollarIsFive() public view {
@@ -44,6 +47,12 @@ contract FundMeTest is Test {
     }
 
     function testFundUpdatesFundedDataStructure() public {
-        fundMe.fund{value: MathConstants.WEI_IN_ONE_ETH}();
+        vm.prank(USER); // the next TX will be sent by USER
+        fundMe.fund{value: SEND_VALUE}();
+        assertEq(
+            SEND_VALUE,
+            fundMe.getAddressToAmountFunded(USER),
+            "Incorrect amount funded"
+        );
     }
 }
