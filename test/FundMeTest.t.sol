@@ -5,6 +5,7 @@ pragma solidity ^0.8.18;
 import {Test, console} from "forge-std/Test.sol";
 import {FundMe} from "../src/FundMe.sol";
 import {DeployFundMe} from "../script/DeployFundMe.s.sol";
+import {Constants} from "../lib/Constants.sol";
 
 contract FundMeTest is Test {
     FundMe fundMe;
@@ -23,6 +24,16 @@ contract FundMeTest is Test {
     }
 
     function testPriceFeedVersion() public view {
-        assertEq(fundMe.getVersion(), 4, "Incorrect owner");
+        uint256 expectedFundMeVersion;
+        if (block.chainid == Constants.MAINNET_CHAIN_ID) {
+            expectedFundMeVersion = 6;
+        } else {
+            expectedFundMeVersion = 4;
+        }
+        assertEq(
+            fundMe.getVersion(),
+            expectedFundMeVersion,
+            "Incorrect price feed version"
+        );
     }
 }
