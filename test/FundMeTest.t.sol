@@ -5,7 +5,7 @@ pragma solidity ^0.8.18;
 import {Test, console} from "forge-std/Test.sol";
 import {FundMe} from "../src/FundMe.sol";
 import {DeployFundMe} from "../script/DeployFundMe.s.sol";
-import {Constants} from "../lib/Constants.sol";
+import {NetworkConstants} from "../lib/NetworkConstants.sol";
 
 contract FundMeTest is Test {
     FundMe fundMe;
@@ -25,7 +25,7 @@ contract FundMeTest is Test {
 
     function testPriceFeedVersion() public view {
         uint256 expectedFundMeVersion;
-        if (block.chainid == Constants.MAINNET_CHAIN_ID) {
+        if (block.chainid == NetworkConstants.MAINNET_CHAIN_ID) {
             expectedFundMeVersion = 6;
         } else {
             expectedFundMeVersion = 4;
@@ -35,5 +35,14 @@ contract FundMeTest is Test {
             expectedFundMeVersion,
             "Incorrect price feed version"
         );
+    }
+
+    function testFundFailsIfNotEnoughETH() public {
+        vm.expectRevert();
+        fundMe.fund();
+    }
+
+    function testFundUpdatesFundedDataStructure() public {
+        fundMe.fund{value: 1e18}();
     }
 }

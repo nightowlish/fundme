@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.18;
 
-library Constants {
-    error Constants__ChainIdNotSupported();
+library NetworkConstants {
+    error NetworkConstants__ChainIdNotSupported();
 
     struct NetworkConfig {
         address priceFeed;
@@ -26,7 +26,7 @@ library Constants {
         } else if (chainId == SEPOLIA_CHAIN_ID) {
             return NetworkConfig(SEPOLIA_ETH_USD_CONFIG);
         } else {
-            revert Constants__ChainIdNotSupported();
+            revert NetworkConstants__ChainIdNotSupported();
         }
     }
 }

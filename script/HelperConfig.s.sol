@@ -3,25 +3,27 @@
 pragma solidity ^0.8.18;
 
 import {Script} from "forge-std/Script.sol";
-import {Constants} from "../lib/Constants.sol";
+import {NetworkConstants} from "../lib/NetworkConstants.sol";
 import {MockV3Aggregator} from "mocks/MockV3Aggregator.sol";
 
 contract HelperConfig is Script {
-    Constants.NetworkConfig public activePriceFeed;
+    NetworkConstants.NetworkConfig public activePriceFeed;
     uint8 public constant DECIMALS = 8;
     int256 public constant INITIAL_PRICE = 3000e8;
 
     constructor() {
-        if (block.chainid == Constants.ANVILE_CHAIN_ID) {
+        if (block.chainid == NetworkConstants.ANVILE_CHAIN_ID) {
             activePriceFeed = getOrCreateAnvileEthUsdConfig();
         } else {
-            activePriceFeed = Constants.chainIdToEthUsdConfig(block.chainid);
+            activePriceFeed = NetworkConstants.chainIdToEthUsdConfig(
+                block.chainid
+            );
         }
     }
 
     function getOrCreateAnvileEthUsdConfig()
         public
-        returns (Constants.NetworkConfig memory)
+        returns (NetworkConstants.NetworkConfig memory)
     {
         if (activePriceFeed.priceFeed != address(0)) {
             return activePriceFeed;
@@ -35,6 +37,6 @@ contract HelperConfig is Script {
         );
         vm.stopBroadcast();
 
-        return Constants.NetworkConfig(address(mockPriceFeed));
+        return NetworkConstants.NetworkConfig(address(mockPriceFeed));
     }
 }
